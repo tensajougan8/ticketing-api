@@ -39,7 +39,7 @@ API Documentation: Swagger (OpenAPI)
 #### Clone the Repository
  
 ``` 
-$> git clone https://github.com/your-username/ticket-booking-api.git 
+$> git clone https://github.com/tensajougan8/ticketing-api.git
 
 $> cd ticket-booking-api
 ```
