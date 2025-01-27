@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Ticket Booking API
+  version: 1.0.0
+  description: API for managing events, seats, and bookings.
+servers:
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /events:
+    get:
+      summary: Get all events
+      description: Retrieve a list of all events with basic details.
+      responses:
+        '200':
+          description: A list of events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /events/{eventId}/seats:
+    get:
+      summary: Get seats for an event
+      description: Retrieve seat availability for a specific event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the event.
+      responses:
+        '200':
+          description: A list of seats for the event.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Seat'
+  /events/{eventId}/book:
+    post:
+      summary: Book seats for an event
+      description: Book one or more seats for a specific event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: The ID of the user making the booking.
+                seats:
+                  type: array
+                  items:
+                    type: string
+                  description: The labels of the seats to book.
+      responses:
+        '201':
+          description: The booking was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Invalid request (e.g., seats already booked).
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the event.
+        name:
+          type: string
+          description: The name of the event.
+        datetime:
+          type: string
+          format: date-time
+          description: The date and time of the event.
+        totalSeats:
+          type: integer
+          description: The total number of seats available for the event.
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the seat.
+        label:
+          type: string
+          description: The label or identifier for the seat.
+        isAvailable:
+          type: boolean
+          description: Indicates whether the seat is available for booking.
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the booking.
+        userId:
+          type: string
+          description: The ID of the user who made the booking.
+        seatLabels:
+          type: array
+          items:
+            type: string
+          description: The labels of the seats booked.
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the booking was created.
